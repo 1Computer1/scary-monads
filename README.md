@@ -1,12 +1,12 @@
 # scary-monads
 
-A proof-of-concept of the following things in JavaScript:
+A proof-of-concept of things in JavaScript almost, but not quite, entirely unlike:
 
-- Something like algebraic data types
-- Something like type classes
-- Something like monads
-- Something like do-notation
-- Something really ugly
+- Algebraic data types
+- Type classes
+- Do-notation
+- Type inference
 
+It is really ugly, to say the least.  
 Currently WIP (do I even want to touch this ever again?).  
 See test folder for some quick examples.  
