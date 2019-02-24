@@ -5,7 +5,7 @@ const Monoid = require('../control/Monoid');
 const Sum = Type.defineData([['Sum', x => x]]);
 
 Type.implement(Sum, Semigroup, {
-    append: (x, y) => Sum.Sum(Type.value(x) + Type.value(y))
+    append: (x, y) => Sum.Sum(x.value + y.value)
 });
 
 Type.implement(Sum, Monoid, {

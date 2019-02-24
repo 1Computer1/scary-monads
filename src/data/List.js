@@ -9,15 +9,15 @@ const Foldable = require('../control/Foldable');
 const List = Type.defineData([['List', xs => xs]]);
 
 Type.implement(List, Functor, {
-    fmap: (f, fx) => List.List(Type.value(fx).map(f))
+    fmap: (f, fx) => List.List(fx.value.map(f))
 });
 
 Type.implement(List, Applicative, {
     pure: x => List.List([x]),
     ap: (ff, fx) => {
         const res = [];
-        for (const f of Type.value(ff)) {
-            for (const x of Type.value(fx)) {
+        for (const f of ff.value) {
+            for (const x of fx.value) {
                 res.push(f(x));
             }
         }
@@ -29,7 +29,7 @@ Type.implement(List, Applicative, {
 Type.implement(List, Monad, {
     bind: (mx, f) => {
         const res = [];
-        for (const x of Type.value(mx)) {
+        for (const x of mx.value) {
             res.push(...f(x));
         }
 
@@ -38,7 +38,7 @@ Type.implement(List, Monad, {
 });
 
 Type.implement(List, Semigroup, {
-    append: (x, y) => List.List(Type.value(x).concat(Type.value(y)))
+    append: (x, y) => List.List(x.value.concat(y.value))
 });
 
 Type.implement(List, Monoid, {
@@ -46,7 +46,7 @@ Type.implement(List, Monoid, {
 });
 
 Type.implement(List, Foldable, {
-    foldMap_at: m => (f, xs) => Monoid.for(m).mconcat_at(m)(Type.value(xs).map(f))
+    foldMap_at: m => (f, xs) => Monoid.for(m).mconcat_at(m)(xs.value.map(f))
 });
 
 module.exports = List;

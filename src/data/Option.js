@@ -11,7 +11,7 @@ const Option = Type.defineData([
 Type.implement(Option, Functor, {
     fmap: (f, fx) => {
         if (Option.isSome(fx)) {
-            return Option.Some(f(Type.value(fx)));
+            return Option.Some(f(fx.value));
         }
 
         return Option.None();
@@ -22,7 +22,7 @@ Type.implement(Option, Applicative, {
     pure: x => Option.Some(x),
     ap: (ff, fx) => {
         if (Option.isSome(ff) && Option.isSome(fx)) {
-            return Option.Some(Type.value(ff)(Type.value(fx)));
+            return Option.Some(ff.value(fx.value));
         }
 
         return Option.None();
@@ -32,7 +32,7 @@ Type.implement(Option, Applicative, {
 Type.implement(Option, Monad, {
     bind: (mx, f) => {
         if (Option.isSome(mx)) {
-            return f(Type.value(mx));
+            return f(mx.value);
         }
 
         return Option.None();

@@ -22,7 +22,6 @@ const defineData = members => {
 };
 
 const dataTypeof = ({ id }) => types.get(id);
-const value = ({ value: x }) => x;
 
 // Global implementation cache.
 // The structure is like `typeID => tcID => impl`.
@@ -94,4 +93,4 @@ const implement = (type, tc, functions) => {
 const and = (...constraints) => ({ tag: andTag, constraints });
 const or = (...constraints) => ({ tag: orTag, constraints });
 
-module.exports = { defineData, dataTypeof, value, defineClass, implement, and, or };
+module.exports = { defineData, dataTypeof, defineClass, implement, and, or };

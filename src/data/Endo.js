@@ -5,7 +5,7 @@ const Monoid = require('../control/Monoid');
 const Endo = Type.defineData([['Endo', x => x]]);
 
 Type.implement(Endo, Semigroup, {
-    append: (f, g) => Endo.Endo(x => Type.value(f)(Type.value(g)(x)))
+    append: (f, g) => Endo.Endo(x => f.value(g.value(x)))
 });
 
 Type.implement(Endo, Monoid, {
