@@ -46,7 +46,7 @@ const hasRequired = (type, required) => {
         return required.constraints.some(x => hasRequired(type, x));
     }
 
-    return implementations.has(type.id) && implementations.get(type.id).has(required.id);
+    return implements(type, required);
 };
 
 const hasMinimal = (functions, minimal) => {
@@ -109,7 +109,8 @@ const implement = (type, tc, functions) => {
     return impl;
 };
 
+const implements = (k, tc) => implementations.has(k.id) && implementations.get(k.id).has(tc.id);
 const and = (...constraints) => ({ tag: andTag, constraints });
 const or = (...constraints) => ({ tag: orTag, constraints });
 
-module.exports = { defineData, dataTypeof, defineClass, implement, and, or };
+module.exports = { defineData, dataTypeof, defineClass, implement, implements, and, or };
