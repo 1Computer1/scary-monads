@@ -10,7 +10,7 @@ const Monoid = Type.defineClass({
     mappend_at,
     mconcat_at,
     mempty: undefined,
-    mappend: (x, y) => mappend_at()(x, y),
+    mappend: mappend_at(),
     mconcat: undefined
 }, 'mempty', Semigroup);
 

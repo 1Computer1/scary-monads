@@ -16,5 +16,6 @@ module.exports = {
 
     // Meta
     Typeclass: require('./meta/Type'),
-    DoNotation: require('./meta/DoNotation')
+    DoNotation: require('./meta/DoNotation'),
+    Util: require('./meta/Util')
 };

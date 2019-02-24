@@ -2,6 +2,10 @@ const Type = require('../meta/Type');
 const Functor = require('../control/Functor');
 const Applicative = require('../control/Applicative');
 const Monad = require('../control/Monad');
+const Semigroup = require('../control/Semigroup');
+const Monoid = require('../control/Monoid');
+const Foldable = require('../control/Foldable');
+const Traversable = require('../control/Traversable');
 
 const Option = Type.defineData([
     ['Some', x => x],
@@ -36,6 +40,40 @@ Type.implement(Option, Monad, {
         }
 
         return Option.None();
+    }
+});
+
+Type.implement(Option, Semigroup, {
+    append: (x, y) => {
+        if (Option.isSome(x) && Option.isSome(y)) {
+            return Option.Some(Semigroup.for(x).append(x, y));
+        }
+
+        return Option.None();
+    }
+});
+
+Type.implement(Option, Monoid, {
+    mempty: () => Option.None()
+});
+
+Type.implement(Option, Foldable, {
+    foldMap_at: m => (f, xs) => {
+        if (Option.isSome(xs)) {
+            return f(xs.value);
+        }
+
+        return Monoid.for(m).mempty();
+    }
+});
+
+Type.implement(Option, Traversable, {
+    traverse_at: ft => (f, xs) => {
+        if (Option.isSome(xs)) {
+            return Functor.for(ft).fmap(Option.Some, f(xs.value));
+        }
+
+        return Applicative.for(ft).pure(Option.None());
     }
 });
 
