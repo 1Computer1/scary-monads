@@ -1,9 +1,9 @@
-const Functor = require('../src/control/Functor');
-const Applicative = require('../src/control/Applicative');
-const Monad = require('../src/control/Monad');
-const List = require('../src/data/List');
-const Option = require('../src/data/Option');
-const { run } = require('../src/meta/DoNotation');
+const {
+    Functor, Applicative, Monad,
+    Foldable,
+    List, Option, Sum,
+    DoNotation: { run }
+} = require('..');
 
 // Getting the correct function for a type.
 Monad.for(Option).join(Option.Some(Option.Some(5)));
@@ -35,3 +35,7 @@ run(Option, function*() {
     const y = yield composeKleisli_at(Option)(f, g)(10);
     yield when(x > 2, Option.Some(x + y));
 });
+
+// Foldable, which has more than one constraint on the types.
+Foldable.for(List).foldMap_at(Sum)(x => Sum.Sum(x), List.List([1, 2, 3, 4]));
+Foldable.for(List).foldr((acc, x) => acc + x, 0, List.List([1, 2, 3, 4]));

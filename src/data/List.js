@@ -2,6 +2,9 @@ const Type = require('../meta/Type');
 const Functor = require('../control/Functor');
 const Applicative = require('../control/Applicative');
 const Monad = require('../control/Monad');
+const Semigroup = require('../control/Semigroup');
+const Monoid = require('../control/Monoid');
+const Foldable = require('../control/Foldable');
 
 const List = Type.defineData([['List', xs => xs]]);
 
@@ -32,6 +35,18 @@ Type.implement(List, Monad, {
 
         return List.List(res);
     }
+});
+
+Type.implement(List, Semigroup, {
+    append: (x, y) => List.List(Type.value(x).concat(Type.value(y)))
+});
+
+Type.implement(List, Monoid, {
+    mempty: () => List.List([])
+});
+
+Type.implement(List, Foldable, {
+    foldMap_at: m => (f, xs) => Monoid.for(m).mconcat_at(m)(Type.value(xs).map(f))
 });
 
 module.exports = List;
