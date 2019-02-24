@@ -5,6 +5,7 @@ const Monad = require('../control/Monad');
 const Semigroup = require('../control/Semigroup');
 const Monoid = require('../control/Monoid');
 const Foldable = require('../control/Foldable');
+const Traversable = require('../control/Traversable');
 
 const List = Type.defineData([['List', xs => xs]]);
 
@@ -47,6 +48,13 @@ Type.implement(List, Monoid, {
 
 Type.implement(List, Foldable, {
     foldMap_at: m => (f, xs) => Monoid.for(m).mconcat_at(m)(xs.value.map(f))
+});
+
+Type.implement(List, Traversable, {
+    traverse_at: ft => (f, xs) =>
+        Foldable.for(xs).foldr((x, acc) =>
+            Applicative.for(ft).liftA2((x_, acc_) =>
+                List.List(acc_.value.concat([x_])), f(x), acc), Applicative.for(ft).pure(List.List([])), xs)
 });
 
 module.exports = List;

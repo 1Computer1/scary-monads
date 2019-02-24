@@ -6,6 +6,7 @@ module.exports = {
     Semigroup: require('./control/Semigroup'),
     Monoid: require('./control/Monoid'),
     Foldable: require('./control/Foldable'),
+    Traversable: require('./control/Traversable'),
 
     // Data types
     List: require('./data/List'),

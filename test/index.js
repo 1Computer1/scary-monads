@@ -1,6 +1,6 @@
 const {
     Functor, Applicative, Monad,
-    Foldable,
+    Foldable, Traversable,
     List, Option, Sum,
     DoNotation: { run }
 } = require('..');
@@ -36,6 +36,8 @@ run(Option, function*() {
     yield when(x > 2, Option.Some(x + y));
 });
 
-// Foldable, which has more than one constraint on the types.
+// Foldable and Traversable, which has more than one constraint on the types.
 Foldable.for(List).foldMap_at(Sum)(x => Sum.Sum(x), List.List([1, 2, 3, 4]));
 Foldable.for(List).foldr((acc, x) => acc + x, 0, List.List([1, 2, 3, 4]));
+Traversable.for(List).traverse_at(Option)(x => Option.Some(x), List.List([1, 2, 3, 4, 5]));
+Traversable.for(List).sequence_at(Option)(List.List([Option.Some(1), Option.None()]));
