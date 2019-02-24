@@ -31,6 +31,8 @@ const implementations = new Map();
 const andTag = Symbol('and');
 const orTag = Symbol('or');
 
+const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+
 const hasRequired = (type, required) => {
     if (required == null) {
         return true;
@@ -56,8 +58,14 @@ const hasMinimal = (functions, minimal) => {
         return minimal.constraints.some(x => hasMinimal(functions, x));
     }
 
-    const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
     return has(functions, minimal) || has(functions, `${minimal}_at`);
+};
+
+const isValidImpl = (tcFs, implFs) => {
+    const tcKeys = Object.keys(tcFs);
+    const implKeys = Object.keys(implFs);
+    return implKeys.every(k => has(tcFs, k))
+        && tcKeys.filter(k => k.endsWith('_at')).every(k => !has(implFs, k) || !has(implFs, k.slice(0, -3)));
 };
 
 // Public typeclasses API
@@ -68,7 +76,13 @@ const defineClass = (functions, minimal, required) => {
         functions,
         minimal,
         required,
-        for: k => implementations.get(k.id).get(id)
+        for: k => {
+            if (!implementations.has(k.id) || !implementations.get(k.id).has(id)) {
+                throw new TypeError('Type does not have a typeclass implementation');
+            }
+
+            return implementations.get(k.id).get(id);
+        }
     };
 };
 
@@ -79,6 +93,10 @@ const implement = (type, tc, functions) => {
 
     if (!hasMinimal(functions, tc.minimal)) {
         throw new TypeError('Minimal definition not satisfied');
+    }
+
+    if (!isValidImpl(tc.functions, functions)) {
+        throw new TypeError('Implementation is not valid');
     }
 
     const impl = Object.create(null);
