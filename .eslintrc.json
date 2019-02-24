@@ -124,7 +124,7 @@
             "$this"
         ],
         "eol-last": "error",
-        "func-names": "error",
+        "func-names": "off",
         "func-name-matching": "error",
         "func-style": [
             "error",
