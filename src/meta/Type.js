@@ -56,7 +56,8 @@ const hasMinimal = (functions, minimal) => {
         return minimal.constraints.some(x => hasMinimal(functions, x));
     }
 
-    return Object.prototype.hasOwnProperty.call(functions, minimal);
+    const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+    return has(functions, minimal) || has(functions, `${minimal}_at`);
 };
 
 // Public typeclasses API

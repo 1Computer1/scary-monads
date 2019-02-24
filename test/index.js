@@ -15,6 +15,8 @@ const when = (p, s) => p ? s : Applicative.for(s).pure(null);
 // Functions that do not have concrete value(s) immediately should have proxy argument(s)
 // and should probably be denoted in the identifier somehow. I'm thinking a trailing `_at`
 // to be suggestive of Haskell's `@` type application operator.
+// The prox(ies) should be as needed rather than every type variable.
+// Think of it as runtime type inference (I can't believe I wrote that).
 const composeKleisli_at = m => (f, g) => x => Monad.for(m).bind(f(x), g);
 
 // We could also try to be cheeky, but it's not always going to work.
@@ -23,7 +25,7 @@ const composeKleisli_at = m => (f, g) => x => Monad.for(m).bind(f(x), g);
 //     return Monad.for(fx).bind(fx, g);
 // };
 
-// Functions should also always have an `_at` variant for consistency.
+// Functions should also have an `_at` variant for consistency.
 // const when_at = f => (p, s) => p ? s : Applicative.for(f).pure(null);
 // const when = (p, s) => when_at(s)(p, s);
 
@@ -36,7 +38,9 @@ run(Option, function*() {
     yield when(x > 2, Option.Some(x + y));
 });
 
-// Foldable and Traversable, which has more than one constraint on the types.
+// Foldable and Traversable, which has more than one constraint on the types,
+// has functions that require the choosing of types, so e.g. `foldMap` is not possible,
+// so `foldMap_at` has to be used.
 Foldable.for(List).foldMap_at(Sum)(x => Sum.Sum(x), List.List([1, 2, 3, 4]));
 Foldable.for(List).foldr((acc, x) => acc + x, 0, List.List([1, 2, 3, 4]));
 Traversable.for(List).traverse_at(Option)(x => Option.Some(x), List.List([1, 2, 3, 4, 5]));
