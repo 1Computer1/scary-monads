@@ -1,39 +1,38 @@
-const Algebraic = require('../meta/Algebraic');
-const Typeclass = require('../meta/Typeclass');
+const Type = require('../meta/Type');
 const Functor = require('../control/Functor');
 const Applicative = require('../control/Applicative');
 const Monad = require('../control/Monad');
 
-const Option = Typeclass.newType(Algebraic.define([
+const Option = Type.defineData([
     ['Some', x => x],
     ['None', () => null]
-]));
+]);
 
-Typeclass.implement(Option, Functor, {
+Type.implement(Option, Functor, {
     fmap: (f, fx) => {
         if (Option.isSome(fx)) {
-            return Option.Some(f(Algebraic.value(fx)));
+            return Option.Some(f(Type.value(fx)));
         }
 
         return Option.None();
     }
 });
 
-Typeclass.implement(Option, Applicative, {
+Type.implement(Option, Applicative, {
     pure: x => Option.Some(x),
     ap: (ff, fx) => {
         if (Option.isSome(ff) && Option.isSome(fx)) {
-            return Option.Some(Algebraic.value(ff)(Algebraic.value(fx)));
+            return Option.Some(Type.value(ff)(Type.value(fx)));
         }
 
         return Option.None();
     }
 });
 
-Typeclass.implement(Option, Monad, {
+Type.implement(Option, Monad, {
     bind: (mx, f) => {
         if (Option.isSome(mx)) {
-            return f(Algebraic.value(mx));
+            return f(Type.value(mx));
         }
 
         return Option.None();

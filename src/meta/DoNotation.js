@@ -2,8 +2,8 @@ const Applicative = require('../control/Applicative');
 const Monad = require('../control/Monad');
 
 const run = (type, gen) => {
-    const { pure } = type.impl(Applicative);
-    const { bind } = type.impl(Monad);
+    const { pure } = Applicative.for(type);
+    const { bind } = Monad.for(type);
     const go = (iter, prev, x) => {
         const curr = iter.next(x);
         if (curr.done) {

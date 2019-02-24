@@ -8,7 +8,6 @@ module.exports = {
     Option: require('./data/Option'),
 
     // Meta
-    Algebraic: require('./meta/Algebraic'),
-    Typeclass: require('./meta/Typeclass'),
+    Typeclass: require('./meta/Type'),
     DoNotation: require('./meta/DoNotation')
 };

@@ -1,7 +1,31 @@
-/**
- * Global implementation cache.
- * The structure is like `typeID => tcID => impl`.
- */
+// Global data type cache.
+// The structure is like `typeID => data`.
+const types = new Map();
+
+// Public algebraic data types API
+const defineData = members => {
+    const id = Symbol();
+    const data = { id };
+    for (const [name, f] of members) {
+        data[name] = (...args) => ({
+            id,
+            tag: data[`tag${name}`],
+            value: f(...args)
+        });
+
+        data[`tag${name}`] = Symbol(name);
+        data[`is${name}`] = x => x.tag === data[`tag${name}`];
+    }
+
+    types.set(id, data);
+    return data;
+};
+
+const dataTypeof = ({ id }) => types.get(id);
+const value = ({ value: x }) => x;
+
+// Global implementation cache.
+// The structure is like `typeID => tcID => impl`.
 const implementations = new Map();
 
 // Constraints-related things
@@ -37,14 +61,14 @@ const hasMinimal = (functions, minimal) => {
 };
 
 // Public typeclasses API
-const define = (functions, minimal, required) => {
+const defineClass = (functions, minimal, required) => {
     const id = Symbol();
     return {
         id,
         functions,
         minimal,
         required,
-        impl: type => implementations.get(type.id).get(id)
+        for: k => implementations.get(k.id).get(id)
     };
 };
 
@@ -58,11 +82,7 @@ const implement = (type, tc, functions) => {
     }
 
     const impl = Object.create(null);
-    for (const [k, f] of Object.entries(tc.functions)) {
-        impl[k] = (...args) => f(type, ...args);
-    }
-
-    Object.assign(impl, functions);
+    Object.assign(impl, tc.functions, functions);
     if (!implementations.has(type.id)) {
         implementations.set(type.id, new Map());
     }
@@ -71,16 +91,7 @@ const implement = (type, tc, functions) => {
     return impl;
 };
 
-const newType = base => {
-    const id = Symbol();
-    return Object.assign(base, {
-        id,
-        impl: tc => implementations.get(id).get(tc.id),
-        impls: () => Object.assign({}, ...implementations.get(id).values())
-    });
-};
-
 const and = (...constraints) => ({ tag: andTag, constraints });
 const or = (...constraints) => ({ tag: orTag, constraints });
 
-module.exports = { newType, define, implement, and, or };
+module.exports = { defineData, dataTypeof, value, defineClass, implement, and, or };

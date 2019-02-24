@@ -1,7 +1,7 @@
-const { define } = require('../meta/Typeclass');
+const Type = require('../meta/Type');
 
-const Functor = define({
-    replace: (type, x, y) => type.impl(Functor).fmap(() => y, x)
+const Functor = Type.defineClass({
+    replace: (x, y) => Functor.for(x).fmap(() => y, x)
 }, 'fmap');
 
 module.exports = Functor;
