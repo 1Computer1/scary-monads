@@ -1,12 +1,13 @@
 const Functor = require('../src/control/Functor');
 const Applicative = require('../src/control/Applicative');
 const Monad = require('../src/control/Monad');
+const List = require('../src/data/List');
 const Option = require('../src/data/Option');
 const { run } = require('../src/meta/DoNotation');
 
 // Getting the correct function for a type.
 Monad.for(Option).join(Option.Some(Option.Some(5)));
-Applicative.for(Option).ap(Option.Some(x => x + 1), Option.Some(3));
+Applicative.for(List).ap(List.List([x => x + 1, x => x + 2]), List.List([3, 4, 5]));
 
 // Getting the correct function for a value.
 const when = (p, s) => p ? s : Applicative.for(s).pure(null);
