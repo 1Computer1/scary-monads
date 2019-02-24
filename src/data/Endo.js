@@ -6,7 +6,7 @@ const Util = require('../meta/Util');
 const Endo = Type.defineData([['Endo', x => x]]);
 
 Type.implement(Endo, Semigroup, {
-    append: (f, g) => Endo.Endo(x => f.value(g.value(x)))
+    append: (f, g) => Endo.Endo(Util.compose(f.value, g.value))
 });
 
 Type.implement(Endo, Monoid, {
